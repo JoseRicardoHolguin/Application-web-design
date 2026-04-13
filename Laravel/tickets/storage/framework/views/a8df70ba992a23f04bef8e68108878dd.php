@@ -7,7 +7,7 @@
 </div>
 <?php if($tickets->isEmpty()): ?>
  <div class="alert alert-info text-center">
- No hay tickets. <a href="<?php echo e(route('tickets.create')); ?>">Crea el
+ <a href="<?php echo e(route('admin.tickets.create')); ?>">Crea el
 primero.</a>
  </div>
 <?php else: ?>
@@ -27,13 +27,16 @@ primero.</a>
  <td><?php echo e($ticket->departamento); ?></td>
  <td><?php echo e(ucfirst($ticket->categoria)); ?></td>
  <td>
- <?php
- $color = ['baja'=>'success','media'=>'info',
- 'alta'=>'warning','critica'=>'danger']
- [$ticket->nivel_urgencia] ?? 'secondary';
- ?>
- <span class="badge bg-<?php echo e($color); ?>"><?php echo e(ucfirst($ticket-
->nivel_urgencia)); ?></span>
+<?php
+ $color = [
+   'baja' => 'success',
+   'media' => 'info',
+   'alta' => 'warning',
+   'critica' => 'danger'
+ ];
+ $badge_color = $color[$ticket->nivel_urgencia] ?? 'secondary';
+?>
+ <span class="badge bg-<?php echo e($badge_color); ?>"><?php echo e(ucfirst($ticket->nivel_urgencia)); ?></span>
  </td>
  <td>
  <span class="badge badge-<?php echo e($ticket->status); ?>">
@@ -43,11 +46,11 @@ primero.</a>
  </td>
  <td><?php echo e($ticket->tecnico_asignado ?? '-'); ?></td>
  <td>
- <a href="<?php echo e(route('tickets.show',$ticket)); ?>"
+ <a href="<?php echo e(route('admin.tickets.show',$ticket)); ?>"
  class="btn btn-sm btn-outline-primary">Ver</a>
- <a href="<?php echo e(route('tickets.edit',$ticket)); ?>"
+ <a href="<?php echo e(route('admin.tickets.edit',$ticket)); ?>"
  class="btn btn-sm btn-outline-warning">Editar</a>
- <form action="<?php echo e(route('tickets.destroy',$ticket)); ?>"
+ <form action="<?php echo e(route('admin.tickets.destroy',$ticket)); ?>"
 method="POST"
  class="d-inline"
 onsubmit="return confirm('¿Eliminar?')">

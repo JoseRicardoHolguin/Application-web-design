@@ -20,12 +20,24 @@ href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 </head>
 <body>
 <nav class="navbar navbar-dark px-4 py-3 mb-4">
-     <a class="navbar-brand fw-bold fs-5" href="{{ route('tickets.index') }}">
+ <a class="navbar-brand fw-bold fs-5" href="{{ route('dashboard') }}">
  Sistema de Tickets
  </a>
- <a href="{{ route('tickets.create') }}" class="btn btn-success btn-sm">
+ @auth
+ @if(auth()->user()->rol === 'admin')
+ <a href="{{ route('admin.tickets.create') }}" class="btn btn-success btn-sm">
  + Nuevo Ticket
  </a>
+ @elseif(auth()->user()->rol === 'gerente')
+ <a href="{{ route('gerente.tickets.index') }}" class="btn btn-success btn-sm">
+ Ver Tickets
+ </a>
+ @elseif(auth()->user()->rol === 'usuario')
+ <a href="{{ route('usuario.tickets.create') }}" class="btn btn-success btn-sm">
+ + Nuevo Ticket
+ </a>
+ @endif
+ @endauth
 </nav>
 <div class="container">
  @if(session('success'))

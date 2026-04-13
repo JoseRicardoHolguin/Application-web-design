@@ -20,12 +20,24 @@ href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 </head>
 <body>
 <nav class="navbar navbar-dark px-4 py-3 mb-4">
-     <a class="navbar-brand fw-bold fs-5" href="<?php echo e(route('tickets.index')); ?>">
+ <a class="navbar-brand fw-bold fs-5" href="<?php echo e(route('dashboard')); ?>">
  Sistema de Tickets
  </a>
- <a href="<?php echo e(route('tickets.create')); ?>" class="btn btn-success btn-sm">
+ <?php if(auth()->guard()->check()): ?>
+ <?php if(auth()->user()->rol === 'admin'): ?>
+ <a href="<?php echo e(route('admin.tickets.create')); ?>" class="btn btn-success btn-sm">
  + Nuevo Ticket
  </a>
+ <?php elseif(auth()->user()->rol === 'gerente'): ?>
+ <a href="<?php echo e(route('gerente.tickets.index')); ?>" class="btn btn-success btn-sm">
+ Ver Tickets
+ </a>
+ <?php elseif(auth()->user()->rol === 'usuario'): ?>
+ <a href="<?php echo e(route('usuario.tickets.create')); ?>" class="btn btn-success btn-sm">
+ + Nuevo Ticket
+ </a>
+ <?php endif; ?>
+ <?php endif; ?>
 </nav>
 <div class="container">
  <?php if(session('success')): ?>

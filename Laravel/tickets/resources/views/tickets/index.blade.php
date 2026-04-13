@@ -7,7 +7,7 @@
 </div>
 @if($tickets->isEmpty())
  <div class="alert alert-info text-center">
- No hay tickets. <a href="{{ route('tickets.create') }}">Crea el
+ <a href="{{ route('admin.tickets.create') }}">Crea el
 primero.</a>
  </div>
 @else
@@ -27,13 +27,16 @@ primero.</a>
  <td>{{ $ticket->departamento }}</td>
  <td>{{ ucfirst($ticket->categoria) }}</td>
  <td>
- @php
- $color = ['baja'=>'success','media'=>'info',
- 'alta'=>'warning','critica'=>'danger']
- [$ticket->nivel_urgencia] ?? 'secondary';
- @endphp
- <span class="badge bg-{{ $color }}">{{ ucfirst($ticket-
->nivel_urgencia) }}</span>
+@php
+ $color = [
+   'baja' => 'success',
+   'media' => 'info',
+   'alta' => 'warning',
+   'critica' => 'danger'
+ ];
+ $badge_color = $color[$ticket->nivel_urgencia] ?? 'secondary';
+@endphp
+ <span class="badge bg-{{ $badge_color }}">{{ ucfirst($ticket->nivel_urgencia) }}</span>
  </td>
  <td>
  <span class="badge badge-{{ $ticket->status }}">
@@ -42,11 +45,19 @@ primero.</a>
  </td>
  <td>{{ $ticket->tecnico_asignado ?? '-' }}</td>
  <td>
- <a href="{{ route('tickets.show',$ticket) }}"
+ <a href="{{ route('admin.tickets.show',$ticket) }}"
  class="btn btn-sm btn-outline-primary">Ver</a>
- <a href="{{ route('tickets.edit',$ticket) }}"
+ <a href="{{ route('admin.tickets.edit',$ticket) }}"
  class="btn btn-sm btn-outline-warning">Editar</a>
- <form action="{{ route('tickets.destroy',$ticket) }}"
+ @if(in_array(auth()->user()->rol, ['admin', 'gerente']) && !in_array($ticket->status, ['finalizada', 'cancelada']))
+     <form action="{{ route('tickets.cerrar', $ticket) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Marcar este ticket como finalizado? Se asignará fecha de resolución actual.')">
+         @csrf
+         @method('PATCH')
+         <input type="hidden" name="status" value="finalizada">
+         <button class="btn btn-sm btn-danger">Cerrar</button>
+     </form>
+ @endif
+ <form action="{{ route('admin.tickets.destroy',$ticket) }}"
 method="POST"
  class="d-inline"
 onsubmit="return confirm('¿Eliminar?')">
