@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body p-5">
                     <!-- Form -->
-                    <form method="POST" action="<?php echo e(route('usuario.tickets.store')); ?>">
+<form method="POST" action="<?php echo e(route('usuario.tickets.store')); ?>" enctype="multipart/form-data">
                         <?php echo csrf_field(); ?>
 
                         <!-- Descripción corta -->
@@ -153,10 +153,17 @@ if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
                                 <div class="invalid-feedback"><?php echo e($message); ?></div>
-                            <?php unset($message);
+<?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+                        </div>
+
+                        <!-- Adjuntos -->
+                        <div class="mb-5">
+                            <label class="form-label fw-bold">Adjuntos (Imágenes y Documentos)</label>
+                            <input type="file" name="attachments[]" multiple class="form-control" accept="image/*,.pdf,.doc,.docx,.txt,.xls,.xlsx">
+                            <small class="text-muted">Máximo 10 MB por archivo. Puedes seleccionar varios archivos.</small>
                         </div>
 
                         <!-- Botones -->

@@ -69,13 +69,40 @@
 }}</strong>
  </div>
  </div>
+
+ <!-- Adjuntos del ticket -->
+ <h5>Adjuntos del ticket</h5>
+ <div class="row">
+ @forelse($ticket->attachments as $attachment)
+ <div class="col-md-3 mb-3">
+ @if(str_starts_with($attachment->mime_type, 'image/'))
+ <a href="{{ Storage::url($attachment->file_path) }}" target="_blank">
+ <img src="{{ Storage::url($attachment->file_path) }}"
+ class="img-fluid rounded shadow-sm" style="max-height: 180px; object-fit: cover;">
+ </a>
+ @else
+ <a href="{{ Storage::url($attachment->file_path) }}" target="_blank"
+ class="btn btn-outline-primary d-block text-truncate">
+ {{ $attachment->original_name }}
+ </a>
+ @endif
+ <small class="text-muted">{{ $attachment->original_name }}</small>
+ </div>
+ @empty
+ <div class="col-12">
+ <div class="alert alert-info">
+ <i class="bi bi-paperclip me-2"></i>No hay adjuntos para este ticket.
+ </div>
+ </div>
+ @endforelse
+ </div>
  </div>
  <div class="card-footer d-flex gap-2">
- <a href="{{ route('tickets.edit',$ticket) }}"
+ <a href="{{ route('admin.tickets.edit', $ticket) }}"
  class="btn btn-warning">Editar</a>
- <a href="{{ route('tickets.index') }}"
+ <a href="{{ route('admin.tickets.index') }}"
  class="btn btn-secondary">Volver</a>
- <form action="{{ route('tickets.destroy',$ticket) }}" method="POST"
+ <form action="{{ route('admin.tickets.destroy', $ticket) }}" method="POST"
  class="ms-auto" onsubmit="return confirm('¿Eliminar?')">
  @csrf @method('DELETE')
  <button class="btn btn-danger">Eliminar</button>

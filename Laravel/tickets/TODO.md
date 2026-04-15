@@ -1,7 +1,15 @@
-# TODO: Implementar funcionalidad de cerrar tickets
+# TODO: Ticket Attachments Implementation
 
-- [x] 1. Update TicketWebController.php: Add validation and finalization logic to update method
-- [x] 2. Create resources/views/admin/tickets/index.blade.php: Tickets list with close buttons/forms
-- [x] 3. Verify success message display in layout
-- [x] 4. Test full flow: create ticket, list in admin, close, check DB/redirect/message (verified via code review: button PATCHes status=finalizada → controller sets fecha_resolucion=now(), shows success alert in layout, redirects to list)
-- [x] 5. Complete task
+## Steps:
+- [x] 1. Fix TicketAttachment model (case mismatch)
+- [x] 2. Update UsuarioController.php: Add attachment validation/upload to store()
+- [x] 3. Update resources/views/usuario/tickets/create.blade.php: Add file input + enctype
+- [x] 4. Run storage:link (if not exists)
+- [x] 5. Create resources/views/usuario/tickets/show.blade.php: With attachments display
+- [x] 6. Update tickets/show.blade.php (admin): Add attachments display
+- [x] 7. Update TicketWebController.php: Add attachments to store()
+- [x] 8. Update resources/views/tickets/create.blade.php + edit.blade.php: Add file input/enctype
+- [x] 12. Fix TicketAttachment fillable
+- [x] 9. Test user flow
+- [x] 10. Test admin flow
+- [ ] 11. attempt_completion

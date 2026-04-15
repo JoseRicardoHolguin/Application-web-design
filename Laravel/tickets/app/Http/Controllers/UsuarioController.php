@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Ticket;
-use Illuminate\Http\Request;
 
+use App\Models\Ticket;
+use App\Models\TicketAttachment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UsuarioController extends Controller
 {
@@ -32,6 +34,7 @@ class UsuarioController extends Controller
  'nivel_urgencia' => 'required|in:baja,media,alta,critica',
   'descripcion_detallada'=> 'nullable',
  'departamento' => 'required|max:100',
+ 'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,txt,xls,xlsx',
  ]);
  // Completa los datos automáticamente
  $datos['numero_reporte'] = 'TKT-' . date('Y') . '-' .
@@ -40,9 +43,21 @@ str_pad(Ticket::count() + 1, 4, '0', STR_PAD_LEFT);
  $datos['cliente_email'] = auth()->user()->email;
  $datos['fecha_reporte'] = now();
  $datos['status'] = 'pendiente';
- Ticket::create($datos);
+ $ticket = Ticket::create($datos);
+ if ($request->hasFile('attachments')) {
+ foreach ($request->file('attachments') as $file) {
+ $path = $file->store('ticket-attachments', 'public');
+ $ticket->attachments()->create([
+ 'original_name' => $file->getClientOriginalName(),
+ 'file_path' => $path,
+ 'mime_type' => $file->getMimeType(),
+ 'size' => $file->getSize(),
+ 'type' => str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'document',
+ ]);
+ }
+ }
  return redirect()->route('usuario.tickets.index')
- ->with('success', 'Ticket creado exitosamente.');
+     ->with('success', 'Ticket creado con adjuntos exitosamente.');
  }
  public function show(Ticket $ticket)
  {

@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body p-5">
                     <!-- Form -->
-                    <form method="POST" action="{{ route('usuario.tickets.store') }}">
+<form method="POST" action="{{ route('usuario.tickets.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Descripción corta -->
@@ -86,7 +86,14 @@
                                       placeholder="Pasos para reproducir el error, screenshots, logs, etc...">{{ old('descripcion_detallada') }}</textarea>
                             @error('descripcion_detallada')
                                 <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+@enderror
+                        </div>
+
+                        <!-- Adjuntos -->
+                        <div class="mb-5">
+                            <label class="form-label fw-bold">Adjuntos (Imágenes y Documentos)</label>
+                            <input type="file" name="attachments[]" multiple class="form-control" accept="image/*,.pdf,.doc,.docx,.txt,.xls,.xlsx">
+                            <small class="text-muted">Máximo 10 MB por archivo. Puedes seleccionar varios archivos.</small>
                         </div>
 
                         <!-- Botones -->

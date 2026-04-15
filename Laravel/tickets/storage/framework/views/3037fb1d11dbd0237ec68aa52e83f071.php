@@ -67,13 +67,41 @@
  <strong><?php echo e($ticket->fecha_resolucion?->format('d/m/Y H:i') ?? '-'); ?></strong>
  </div>
  </div>
+
+ <!-- Adjuntos del ticket -->
+ <h5>Adjuntos del ticket</h5>
+ <div class="row">
+ <?php $__empty_1 = true; $__currentLoopData = $ticket->attachments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+ <div class="col-md-3 mb-3">
+ <?php if(str_starts_with($attachment->mime_type, 'image/')): ?>
+ <a href="<?php echo e(Storage::url($attachment->file_path)); ?>" target="_blank">
+ <img src="<?php echo e(Storage::url($attachment->file_path)); ?>"
+ class="img-fluid rounded shadow-sm" style="max-height: 180px; object-fit: cover;">
+ </a>
+ <?php else: ?>
+ <a href="<?php echo e(Storage::url($attachment->file_path)); ?>" target="_blank"
+ class="btn btn-outline-primary d-block text-truncate">
+ <?php echo e($attachment->original_name); ?>
+
+ </a>
+ <?php endif; ?>
+ <small class="text-muted"><?php echo e($attachment->original_name); ?></small>
+ </div>
+ <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+ <div class="col-12">
+ <div class="alert alert-info">
+ <i class="bi bi-paperclip me-2"></i>No hay adjuntos para este ticket.
+ </div>
+ </div>
+ <?php endif; ?>
+ </div>
  </div>
  <div class="card-footer d-flex gap-2">
- <a href="<?php echo e(route('tickets.edit',$ticket)); ?>"
+ <a href="<?php echo e(route('admin.tickets.edit', $ticket)); ?>"
  class="btn btn-warning">Editar</a>
- <a href="<?php echo e(route('tickets.index')); ?>"
+ <a href="<?php echo e(route('admin.tickets.index')); ?>"
  class="btn btn-secondary">Volver</a>
- <form action="<?php echo e(route('tickets.destroy',$ticket)); ?>" method="POST"
+ <form action="<?php echo e(route('admin.tickets.destroy', $ticket)); ?>" method="POST"
  class="ms-auto" onsubmit="return confirm('¿Eliminar?')">
  <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
  <button class="btn btn-danger">Eliminar</button>

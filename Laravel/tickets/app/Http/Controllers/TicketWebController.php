@@ -1,7 +1,11 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Ticket;
+use App\Models\TicketAttachment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 class TicketWebController extends Controller
 {
  // GET /tickets
@@ -18,9 +22,33 @@ class TicketWebController extends Controller
   // POST /tickets
  public function store(Request $request)
  {
- Ticket::create($request->all());
+ $validated = $request->validate([
+     'numero_reporte' => 'required|string|max:20|unique:tickets',
+     'cliente_nombre' => 'required|string|max:100',
+     'cliente_email' => 'nullable|email|max:150',
+     'departamento' => 'required|string|max:100',
+     'categoria' => 'required|in:software,hardware,comunicaciones,plataformas,email,otro',
+     'nivel_urgencia' => 'required|in:baja,media,alta,critica',
+     'descripcion_corta' => 'required|string|max:255',
+     'descripcion_detallada' => 'nullable|string',
+     'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,txt,xls,xlsx',
+ ]);
+
+ $ticket = Ticket::create($request->except('attachments'));
+ if ($request->hasFile('attachments')) {
+     foreach ($request->file('attachments') as $file) {
+         $path = $file->store('ticket-attachments', 'public');
+         $ticket->attachments()->create([
+             'original_name' => $file->getClientOriginalName(),
+             'file_path' => $path,
+             'mime_type' => $file->getMimeType(),
+             'size' => $file->getSize(),
+             'type' => str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'document',
+         ]);
+     }
+ }
  return redirect()->route('admin.tickets.index')
- ->with('success', 'Ticket creado exitosamente.');
+ ->with('success', 'Ticket creado con adjuntos exitosamente.');
  }
  // GET /tickets/{ticket}
  public function show(Ticket $ticket)
@@ -82,3 +110,4 @@ class TicketWebController extends Controller
  ->with('success', 'Ticket eliminado.');
  }
 }
+
