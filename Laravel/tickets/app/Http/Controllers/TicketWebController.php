@@ -43,10 +43,21 @@ class TicketWebController extends Controller
              'file_path' => $path,
              'mime_type' => $file->getMimeType(),
              'size' => $file->getSize(),
-             'type' => str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'document',
+ 'type' => str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'document',
          ]);
      }
  }
+
+ // AI Image Analysis
+$analysisService = new \App\Services\ImageAnalysisService();
+ $imageAttachment = $ticket->attachments()->where('type', 'image')->first();
+ if ($imageAttachment) {
+     $analysis = $analysisService->analyzeImage($imageAttachment->file_path);
+     if ($analysis) {
+         $ticket->update(['ai_analysis' => $analysis]);
+     }
+ }
+
  return redirect()->route('admin.tickets.index')
  ->with('success', 'Ticket creado con adjuntos exitosamente.');
  }

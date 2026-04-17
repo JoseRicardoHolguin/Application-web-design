@@ -30,6 +30,7 @@ class Ticket extends Model {
  'fecha_resolucion',
  'comentarios_tecnico',
  'status',
+ 'ai_analysis',
  ];
  /**
  * Casting automatico de tipos.

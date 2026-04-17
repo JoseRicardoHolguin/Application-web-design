@@ -104,7 +104,7 @@
                     </div>
                     @endif
 
-                    @if($ticket->comentarios_tecnico)
+@if($ticket->comentarios_tecnico)
                     <hr class="my-5">
                     <h5 class="fw-bold mb-3">
                         <i class="bi bi-tools me-2 text-warning"></i>
@@ -112,6 +112,17 @@
                     </h5>
                     <div class="bg-light p-4 rounded-3">
                         {!! nl2br(e($ticket->comentarios_tecnico)) !!}
+                    </div>
+                    @endif
+
+                    @if($ticket->ai_analysis)
+                    <hr class="my-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-cpu me-2 text-primary"></i>
+                        Análisis IA (Diagnóstico Automático)
+                    </h5>
+                    <div class="alert alert-info">
+                        <strong>🤖 IA:</strong> {!! nl2br(e($ticket->ai_analysis)) !!}
                     </div>
                     @endif
                 </div>

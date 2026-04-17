@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'huggingface' => [
+        'token' => env('HF_API_TOKEN'),
+        'model' => 'microsoft/Florence-2-large',
+        'endpoint' => 'https://api-inference.huggingface.co/models/microsoft/Florence-2-large',
+    ],
+
 ];
+

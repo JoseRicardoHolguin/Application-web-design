@@ -37,8 +37,7 @@ class UsuarioController extends Controller
  'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,txt,xls,xlsx',
  ]);
  // Completa los datos automáticamente
- $datos['numero_reporte'] = 'TKT-' . date('Y') . '-' .
-str_pad(Ticket::count() + 1, 4, '0', STR_PAD_LEFT);
+$datos['numero_reporte'] = 'TKT-' . date('Y') . '-' . str_pad(Ticket::whereYear('fecha_reporte', date('Y'))->count() + 1, 4, '0', STR_PAD_LEFT);
  $datos['cliente_nombre'] = auth()->user()->name;
  $datos['cliente_email'] = auth()->user()->email;
  $datos['fecha_reporte'] = now();
@@ -56,6 +55,17 @@ str_pad(Ticket::count() + 1, 4, '0', STR_PAD_LEFT);
  ]);
  }
  }
+
+ // AI Image Analysis
+$analysisService = new \App\Services\ImageAnalysisService();
+ $imageAttachment = $ticket->attachments()->where('type', 'image')->first();
+ if ($imageAttachment) {
+     $analysis = $analysisService->analyzeImage($imageAttachment->file_path);
+     if ($analysis) {
+         $ticket->update(['ai_analysis' => $analysis]);
+     }
+ }
+
  return redirect()->route('usuario.tickets.index')
      ->with('success', 'Ticket creado con adjuntos exitosamente.');
  }

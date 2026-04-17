@@ -48,12 +48,23 @@
  <p><?php echo e($ticket->descripcion_detallada); ?></p>
  </div>
  <?php endif; ?>
- <?php if($ticket->comentarios_tecnico): ?>
+<?php if($ticket->comentarios_tecnico): ?>
  <div class="col-12">
  <p class="mb-1 text-muted small">Comentarios del Técnico</p>
  <p><?php echo e($ticket->comentarios_tecnico); ?></p>
  </div>
  <?php endif; ?>
+
+ <?php if($ticket->ai_analysis): ?>
+ <div class="col-12">
+ <p class="mb-1 text-muted small">Análisis IA (Diagnóstico Automático)</p>
+ <div class="alert alert-info">
+ <strong>🤖 IA:</strong> <?php echo e($ticket->ai_analysis); ?>
+
+ </div>
+ </div>
+ <?php endif; ?>
+
  <div class="col-md-4">
  <p class="mb-1 text-muted small">Fecha Reporte</p>
  <strong><?php echo e($ticket->fecha_reporte?->format('d/m/Y H:i')); ?></strong>

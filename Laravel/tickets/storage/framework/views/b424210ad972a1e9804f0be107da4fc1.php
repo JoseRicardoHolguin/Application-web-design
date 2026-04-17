@@ -1,1 +1,0 @@
-<?php /**PATH C:\Users\jrhro\OneDrive\Desktop\Escuela\8vo\Internet II\Application-web-design\Laravel\tickets\resources\views/gerente/reportes.blade.php ENDPATH**/ ?>

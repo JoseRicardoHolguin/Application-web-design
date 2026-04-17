@@ -47,12 +47,22 @@
  <p>{{ $ticket->descripcion_detallada }}</p>
  </div>
  @endif
- @if($ticket->comentarios_tecnico)
+@if($ticket->comentarios_tecnico)
  <div class="col-12">
  <p class="mb-1 text-muted small">Comentarios del Técnico</p>
  <p>{{ $ticket->comentarios_tecnico }}</p>
  </div>
  @endif
+
+ @if($ticket->ai_analysis)
+ <div class="col-12">
+ <p class="mb-1 text-muted small">Análisis IA (Diagnóstico Automático)</p>
+ <div class="alert alert-info">
+ <strong>🤖 IA:</strong> {{ $ticket->ai_analysis }}
+ </div>
+ </div>
+ @endif
+
  <div class="col-md-4">
  <p class="mb-1 text-muted small">Fecha Reporte</p>
  <strong>{{ $ticket->fecha_reporte?->format('d/m/Y H:i')
