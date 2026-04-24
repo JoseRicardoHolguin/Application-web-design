@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+test_ai*.php
+test_real_api.php
+verify_token.php
+curl_test.bat
