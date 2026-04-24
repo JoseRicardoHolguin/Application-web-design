@@ -37,8 +37,14 @@ return [
 
     'huggingface' => [
         'token' => env('HF_API_TOKEN'),
-        'model' => 'microsoft/Florence-2-large',
-        'endpoint' => 'https://api-inference.huggingface.co/models/microsoft/Florence-2-large',
+        'model' => 'nlpconnect/vit-gpt2-image-captioning',
+        'endpoint' => 'https://api-inference.huggingface.co/models/nlpconnect/vit-gpt2-image-captioning',
+    ],
+
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => 'gpt-4-vision-preview',
+        'endpoint' => 'https://api.openai.com/v1/chat/completions',
     ],
 
 ];

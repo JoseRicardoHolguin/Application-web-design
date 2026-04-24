@@ -18,9 +18,9 @@ class TicketAttachment extends Model
         'type',
     ];
 
-   public function ticket()
+    public function ticket()
     {
-return $this->belongsTo(ticket::class);
+        return $this->belongsTo(Ticket::class);
     }
 }
 

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\ticket;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 class TicketController extends Controller {
  // ── GET /api/tickets ────────────────────────────────────────
  // Retorna todos los tickets. En produccion se paginaria.
@@ -33,14 +34,23 @@ class TicketController extends Controller {
  'fecha_promesa' => 'nullable|date|after:fecha_reporte',
  'comentarios_tecnico'=> 'nullable|string',
  'status' => 'in:pendiente,en_curso,en_espera,cancelada,finalizada',
+ 'attachments.*' => 'nullable|file|max:10240', // 10MB máximo por archivo
  ]);
- $ticket = Ticket::create($validated);
- return response()->json([
- 'success' => true,
- 'message' => 'Ticket creado exitosamente.',
- 'data' => $ticket,
- ], 201); // 201 Created
+$ticket = Ticket::create($request->except('attachments'));
+ if ($request->hasFile('attachments')) {
+ foreach ($request->file('attachments') as $file) {
+ $path = $file->store('ticket-attachments', 'public');
+ $ticket->attachments()->create([
+ 'original_name' => $file->getClientOriginalName(),
+ 'file_path' => $path,
+ 'mime_type' => $file->getMimeType(),
+ 'size' => $file->getSize(),
+ 'type' => str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'document',
+ ]);
  }
+ }
+ return redirect()->route('tickets.show', $ticket)->with('success', 'Ticket creado con adjuntos');
+}}
  // ── GET /api/tickets/{ticket} ────────────────────────────────
  // Route Model Binding: Laravel busca automaticamente el ticket por ID.
  public function show(Ticket $ticket): JsonResponse {

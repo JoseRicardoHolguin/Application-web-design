@@ -5,6 +5,7 @@ use App\Models\Ticket;
 use App\Models\TicketAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
 {
@@ -37,7 +38,11 @@ class UsuarioController extends Controller
  'attachments.*' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,gif,pdf,doc,docx,txt,xls,xlsx',
  ]);
  // Completa los datos automáticamente
-$datos['numero_reporte'] = 'TKT-' . date('Y') . '-' . str_pad(Ticket::whereYear('fecha_reporte', date('Y'))->count() + 1, 4, '0', STR_PAD_LEFT);
+ DB::transaction(function () use (&$datos) {
+     $year = date('Y');
+     $lastId = Ticket::whereYear('created_at', $year)->max('id') ?? 0;
+     $datos['numero_reporte'] = 'TKT-' . $year . '-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
+ });
  $datos['cliente_nombre'] = auth()->user()->name;
  $datos['cliente_email'] = auth()->user()->email;
  $datos['fecha_reporte'] = now();
@@ -78,3 +83,4 @@ $analysisService = new \App\Services\ImageAnalysisService();
  return view('usuario.tickets.show', compact('ticket'));
  }
 }
+
